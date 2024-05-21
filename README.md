@@ -80,5 +80,3 @@ Follow these steps to set up and run the URL Shortener application locally:
 ## Contributions
 
 Contributions to this project are welcome! If you have any suggestions or improvements, feel free to open an issue or submit a pull request.
-
-Thank you for using our URL Shortener application! If you have any questions or need further assistance, please don't hesitate to contact us.
