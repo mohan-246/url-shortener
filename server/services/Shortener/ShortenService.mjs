@@ -1,11 +1,13 @@
 import express from "express";
 import admin from "firebase-admin";
 import cors from "cors";
+import 'dotenv/config.js'
 import serviceAccount from "./firebase/serviceAccountKey.mjs";
 import connect from "./functions/setupDatabase.mjs";
 import URLModel from "./schemas/urlSchema.mjs";
 import RangeModel from "./schemas/RangeSchema.mjs";
 import base10ToBase62 from "./functions/base10ToBase62.mjs";
+import { allocateRange } from "./zookeeper/rangeManager.mjs";
 
 const app = express();
 
@@ -24,28 +26,30 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-async function getRange() {
-  try { 
-    const range = await RangeModel.findOne({ Name: 'Deploy' });
- 
-    if (range) {
-      return range;
-    } else { 
-      const newRange = new RangeModel({
-        Name: 'Deploy',
-        currentRange: 100000
-      });
-      await newRange.save();
-      return newRange.currentRange;
-    }
-  } catch (error) { 
-    console.error('Error fetching or creating range:', error);
-    throw error;
+
+let currentRange = null , currentID = null
+
+app.get('/getRange',async (req, res) => {
+  try{
+    const {start , end } = await allocateRange()
+
+    res.status(200).json({start , end})
+  }
+  catch(err){
+    console.error(err)
+    res.status(500).json({error: err.message})
+  }
+});
+async function getRange(){
+  try{
+    const {start , end } = await allocateRange()
+    currentID = start 
+    currentRange = end
+  }
+  catch(err){
+    console.error(err)
   }
 }
-
-let currentRange = 1000;
-let count = 0;
 app.post("/shorten", async (req, res) => {
   const idToken = req.headers.authorization;
   const longUrl = req.body.longUrl;
@@ -54,16 +58,13 @@ app.post("/shorten", async (req, res) => {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const uid = decodedToken.uid;
 
-    console.log("success", uid);
     let siteId
-    if(count + 1 < currentRange){
-      siteId = count++;
+    if((!currentID && !currentRange) || (currentID >= currentRange)){
+      getRange()
     }
-    else{
-      currentRange = getRange()
-      siteId = count++;
-    }
-    console.log(siteId , currentRange)
+    
+    siteId = currentID++;
+    
     const shortUrl = `http://localhost:3002/${base10ToBase62(siteId)}`;
 
     try {

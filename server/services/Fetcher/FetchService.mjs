@@ -1,6 +1,7 @@
 import express from "express";
 import admin from "firebase-admin";
 import cors from "cors";
+import 'dotenv/config.js'
 import serviceAccount from './firebase/serviceAccountKey.mjs';
 import URLModel from "./schemas/urlSchema.mjs";
 import connect from './functions/setupDatabase.mjs';
@@ -14,6 +15,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json())
 connect();
 
@@ -23,7 +25,7 @@ admin.initializeApp({
   
 app.get("/urls", async (req, res) => {
     const idToken = req.headers.authorization;
-  
+    
     try {
       const decodedToken = await admin.auth().verifyIdToken(idToken);
       const uid = decodedToken.uid;

@@ -35,8 +35,6 @@ function App() {
               })
               .then((data) => {
                 setUrls(data.urls);
-                console.log(data);
-                console.log("urls recieved successfully");
               })
               .catch((error) => {
                 console.error(
@@ -51,7 +49,6 @@ function App() {
       } else {
         window.location.href = "/signin";
         setUser(null);
-        console.log("User is logged out");
       }
     });
     return () => {
@@ -62,7 +59,6 @@ function App() {
     auth
       .signOut()
       .then(() => {
-        console.log("User logged out successfully");
       })
       .catch((error) => {
         console.error("Error logging out user:", error);
@@ -74,11 +70,9 @@ function App() {
       window.alert("Enter a URl to convert!")
       return;
     }
-    console.log("shortening");
     auth.currentUser
       .getIdToken()
       .then((idToken) => {
-        console.log(idToken);
         fetch("http://localhost:3000/shorten", {
           method: "POST",
           headers: {
@@ -91,7 +85,6 @@ function App() {
             if (!response.ok) {
               throw new Error("Network response was not ok");
             }
-            console.log("Token sent to server successfully");
             return response.json();
           })
           .then((data) => {
