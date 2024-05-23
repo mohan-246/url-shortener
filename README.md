@@ -22,7 +22,7 @@ Before you begin, ensure you have the following prerequisites installed on your 
 
 - **Docker Desktop**: Docker Desktop is needed to run Docker containers for some services. You can download and install it from [here](https://www.docker.com/products/docker-desktop).
 
-- **ZooKeeper**: ZooKeeper is used for range allocation. Detailed setup instructions can be found in the `server/services/Shortener/zookeeper/README.md` file.
+- **ZooKeeper**: ZooKeeper is used for range allocation.
 
 ## Project Structure
 
@@ -54,7 +54,7 @@ Follow these steps to set up and run the URL Shortener application locally:
     ```
     mongod
     ```
-    Alternatively, you can use the docker-compose.yml file in 'server/mongoDB' to create a Docker application with sharded clusters. Refer to this [blog](https://medium.com/@yasasvi/mongodb-sharding-with-docker-c8b18bee32eb).
+    Alternatively, you can use the docker-compose.yml file in 'server/mongoDB' to create a Docker application with sharded clusters. Refer to this [blog](https://medium.com/@yasasvi/mongodb-sharding-with-docker-c8b18bee32eb) for more information.
 
 5. Start ZooKeeper using the Docker Compose file located in server/services/Shortener/zookeeper:
     ```
