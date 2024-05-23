@@ -55,19 +55,29 @@ function App() {
       setUser(null);
     };
   }, [auth]);
+  useEffect(() => {
+    const sortedUrlsCopy = [...urls].sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+
+      return dateB - dateA;
+    });
+    setUrls(sortedUrlsCopy);
+
+    urls.sort();
+  }, []);
   const logoutUser = () => {
     auth
       .signOut()
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => {
         console.error("Error logging out user:", error);
       });
   };
   const shortenLink = async (e) => {
     e.preventDefault();
-    if(longUrl.trim() === ''){
-      window.alert("Enter a URl to convert!")
+    if (longUrl.trim() === "") {
+      window.alert("Enter a URl to convert!");
       return;
     }
     auth.currentUser
@@ -89,7 +99,7 @@ function App() {
           })
           .then((data) => {
             setShortUrl(data.url.shortUrl);
-            setUrls((prev) => [...prev,data.url])
+            setUrls((prev) => [data.url, ...prev]);
           })
           .catch((error) => {
             console.error(
@@ -141,15 +151,14 @@ function App() {
       >
         Copied to clipboard
       </div>
-      <div className=" min-h-screen h-full sm:py-0 py-[10vmin] w-screen bg-gradient-to-br from-pink-300 via-[#e08dc2] to-[#8c3eb0] flex flex-col items-center  justify-center">
-        {/* <div className="fixed top-0 left-0 filter blur-3xl rounded-full h-[75vw] w-[75vw] translate-x-[-30vw] translate-y-[30vh] bg-gradient-to-tr opacity-55 from-white outline-2 outline outline-white to-indigo-100"></div> */}
-        <div className=" fixed top-2 left-0 w-screen h-[10vmin] flex items-center justify-center  text-gray-50 ">
-          <div className="h-full sm:w-[65vw] flex pl-10 items-center text-3xl font-bold justify-start">
+      <div className=" min-h-screen h-full sm:py-0 py-[0vmin] w-screen bg-gradient-to-br from-pink-300 via-[#e08dc2] to-[#8c3eb0] flex flex-col items-center  justify-center">
+        <div className=" fixed top-2 left-0 w-screen h-[10vmin] flex items-center justify-center text-gray-50 ">
+          <div className="h-full sm:w-[65vw] w-[35vw] flex sm:ml-10 ml-4 items-center text-3xl font-bold justify-start ">
             Shortify
           </div>
-          <div className="flex h-full w-auto  items-center justify-end gap-4 pr-10">
+          <div className="flex h-full sm:w-auto w-[65vw] items-center justify-end gap-4 sm:mr-10 mr-4 ">
             {user ? (
-              <p className="sm:opacity-100 opacity-0">{user.email}</p>
+              <p className="sm:opacity-100 sm:flex-1 hidden">{user.email}</p>
             ) : (
               <button className="sm:opacity-100 opacity-0 sm:h-10 sm:w-32 text h-[5vmin] w-[24vmin] gap-2 flex items-center justify-center text-gray-50 bg-white bg-opacity-25 rounded-full">
                 <a href="/signin">Login</a>
@@ -206,28 +215,27 @@ function App() {
             </button>
           </form>
           <div>
-            {/* <p className="sm:text-2xl text-xl text-center font-bold text-gray-50">
-              Here's your short link
-            </p> */}
-            {shortUrl && <div className="rounded-full mt-2 mb-2 px-2 items-center  bg-white bg-opacity-45 backdrop-blur-lg  outline-gray-50 flex h-12  w-auto  outline outline-1">
-              <p className="sm:h-8 text-xl sm:w-56 cursor-text flex h-[10vmin] w-[45vmin] p-5 bg-transparent text-gray-50 outline-none items-center justify-center">
-                {shortUrl.slice(0, 25)}
-              </p>
-              <button
-                onClick={copyToClipBoard}
-                className="bg-transparent h-full font-semibold sm:text-sm text-xs  rounded-full sm:p-3 px-1"
-              >
-                <img
-                  src="/copy.png"
-                  alt=""
-                  className="sm:h-5 sm:w-5 h-[5vmin] w-[5vmin]  cursor-pointer"
-                />
-              </button>
-            </div>}
+            {shortUrl && (
+              <div className="rounded-full mt-2 mb-2 px-2 items-center  bg-white bg-opacity-45 backdrop-blur-lg  outline-gray-50 flex h-12  w-auto  outline outline-1">
+                <p className="sm:h-8 text-xl sm:w-56 cursor-text flex h-[10vmin] w-[45vmin] p-5 bg-transparent text-gray-50 outline-none items-center justify-center">
+                  {shortUrl.slice(0, 25)}
+                </p>
+                <button
+                  onClick={copyToClipBoard}
+                  className="bg-transparent h-full font-semibold sm:text-sm text-xs  rounded-full sm:p-3 px-1"
+                >
+                  <img
+                    src="/copy.png"
+                    alt=""
+                    className="sm:h-5 sm:w-5 h-[5vmin] w-[5vmin]  cursor-pointer"
+                  />
+                </button>
+              </div>
+            )}
           </div>
         </div>
         {urls.length > 0 && (
-          <div className="sm:h-[80%] mb-10 h-full w-[80%] bg-white rounded-3xl shadow-xl sm:bg-opacity-45 bg-opacity-10 backdrop-blur-lg flex sm:flex-row flex-col items-center justify-center">
+          <div className="sm:h-[80%] mb-10 h-full sm:w-[80%] w-[95%] bg-white rounded-3xl shadow-xl sm:bg-opacity-45 bg-opacity-10 backdrop-blur-lg flex sm:flex-row flex-col items-center justify-center">
             <div className="w-full h-full bg-opacity-45 bg-white rounded-3xl flex items-center justify-center">
               <table className="min-w-full divide-y divide-black">
                 <thead className="bg-transparent text-gray-800">
@@ -244,25 +252,29 @@ function App() {
                     <th className="pr-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Clicks
                     </th>
-                    
                   </tr>
                 </thead>
-                <tbody className="bg-transparent divide-y divide-black text-gray-800">
+                <tbody className="bg-transparent divide-y text-xs divide-black text-gray-800">
                   {urls.map((url, index) => (
                     <tr key={index}>
-                      <td className="pl-6 py-4 cursor-pointer whitespace-nowrap" onClick={() => window.open(url.longUrl, '_blank')}>
-                        {url.longUrl}
+                      <td
+                        className="pl-6 py-4 truncate"
+                        onClick={() => window.open(url.longUrl, "_blank")}
+                      >
+                        <span className="truncate block max-w-[20vw]">
+                          {url.longUrl}
+                        </span>
                       </td>
-                      <td className=" py-4 cursor-pointer whitespace-nowrap" onClick={() => window.open(url.shortUrl, '_blank')}>
-                        {url.shortUrl}
+                      <td
+                        className="py-4 truncate"
+                        onClick={() => window.open(url.shortUrl, "_blank")}
+                      >
+                        <span className="truncate block max-w-[20vw]">
+                          {url.shortUrl}
+                        </span>
                       </td>
-                      <td className=" py-4 whitespace-nowrap">
-                        {url.createdAt.slice(0 , 10)}
-                      </td>
-                      <td className="pr-6 py-4 whitespace-nowrap">
-                        {url.clicks}
-                      </td>
-                  
+                      <td className="py-4">{url.createdAt.slice(0, 10)}</td>
+                      <td className="pr-6 py-4">{url.clicks}</td>
                     </tr>
                   ))}
                 </tbody>

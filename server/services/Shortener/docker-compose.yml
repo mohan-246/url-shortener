@@ -1,0 +1,16 @@
+
+version: '3'
+
+services:
+
+  shortener:
+    container_name: shorten-service
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - url_shortener
+
+networks:
+  url_shortener:
+    external: true  

@@ -1,0 +1,16 @@
+
+version: '3'
+
+services:
+
+  redirector:
+    container_name: redirect-service
+    build: .
+    ports:
+      - "3002:3002"
+    networks:
+      - url_shortener
+
+networks:
+  url_shortener:
+    external: true  

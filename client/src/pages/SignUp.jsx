@@ -22,7 +22,7 @@ const SignUp = () => {
   };
   const handleSignup = () => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(() => {
         setError(null);
         window.location.href = '/';
       })
@@ -34,9 +34,8 @@ const SignUp = () => {
   };
   const handleGoogleSignUp = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(() => {
         window.location.href = '/';
-        console.log(user);
       })
       .catch((error) => {
         const errorMessage = error.message;

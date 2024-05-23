@@ -6,8 +6,6 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  setPersistence,
-  browserSessionPersistence,
 } from "firebase/auth";
 import firebaseConfig from "../firebase/firebaseConfig";
 
@@ -23,7 +21,6 @@ const SignIn = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  console.log(auth);
   const handleSignIn = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
@@ -39,43 +36,12 @@ const SignIn = () => {
 
   const handleGoogleSignIn = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-        console.log(user);
+      .then(() => {
         window.location.href = '/';
-        auth.currentUser
-          .getIdToken()
-          .then((idToken) => {
-            
-            // fetch("http://localhost:3000/protected", {
-            //   method: "GET",
-            //   headers: {
-            //     Authorization: idToken,
-            //   },
-            // })
-            //   .then((response) => {
-            //     if (!response.ok) {
-            //       throw new Error("Network response was not ok");
-            //     }
-            //     console.log("Token sent to server successfully");
-            //   })
-            //   .catch((error) => {
-            //     console.error(
-            //       "There was a problem sending the token to the server:",
-            //       error
-            //     );
-            //   });
-          })
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        setError(error);
-        console.log(error.message);
+        setError(errorMessage);
       });
   };
 

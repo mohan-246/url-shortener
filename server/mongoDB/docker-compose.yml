@@ -1,0 +1,109 @@
+
+version: '3'
+
+services:
+
+  configsvr1:
+    container_name: configsvr1
+    image: mongo:latest
+    command: mongod --configsvr --replSet config_rs --dbpath /data/db --port 27017
+    volumes:
+      - configsvr1:/data/db
+    networks:
+      - url_shortener
+
+  configsvr2:
+    container_name: configsvr2
+    image: mongo:latest
+    command: mongod --configsvr --replSet config_rs --dbpath /data/db --port 27017
+    volumes:
+      - configsvr2:/data/db
+    networks:
+      - url_shortener
+
+  configsvr3:
+    container_name: configsvr3
+    image: mongo:latest
+    command: mongod --configsvr --replSet config_rs --dbpath /data/db --port 27017
+    volumes:
+      - configsvr3:/data/db
+    networks:
+      - url_shortener
+  
+  shardsvr1_1:
+    container_name: shardsvr1_1
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard1_rs --dbpath /data/db --port 27017 
+    volumes:
+      - shardsvr1_1:/data/db
+    networks:
+      - url_shortener
+
+  shardsvr1_2:
+    container_name: shardsvr1_2
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard1_rs --dbpath /data/db --port 27017
+    volumes:
+      - shardsvr1_2:/data/db
+    networks:
+      - url_shortener
+
+  shardsvr1_3:
+    container_name: shardsvr1_3
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard1_rs --dbpath /data/db --port 27017
+    volumes:
+      - shardsvr1_3:/data/db
+    networks:
+      - url_shortener
+
+  shardsvr2_1:
+    container_name: shardsvr2_1
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard2_rs --dbpath /data/db --port 27017
+    volumes:
+      - shardsvr2_1:/data/db
+    networks:
+      - url_shortener
+
+  shardsvr2_2:
+    container_name: shardsvr2_2
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard2_rs --dbpath /data/db --port 27017
+    volumes:
+      - shardsvr2_2:/data/db
+    networks:
+      - url_shortener
+
+  shardsvr2_3:
+    container_name: shardsvr2_3
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard2_rs --dbpath /data/db --port 27017
+    volumes:
+      - shardsvr2_3:/data/db
+    networks:
+      - url_shortener
+
+  mongos:
+    container_name: mongos
+    image: mongo:latest
+    command: mongos --configdb config_rs/configsvr1:27017,configsvr2:27017,configsvr3:27017 --port 27017 --bind_ip_all
+    networks:
+      - url_shortener
+
+networks:
+  url_shortener:
+    external: true  
+
+volumes:
+  configsvr1:
+  configsvr2:
+  configsvr3:
+
+  shardsvr1_1:
+  shardsvr1_2:
+  shardsvr1_3:
+
+  shardsvr2_1:
+  shardsvr2_2:
+  shardsvr2_3:

@@ -1,6 +1,6 @@
 import zookeeper from 'node-zookeeper-client';
 
-const client = zookeeper.createClient('localhost:2181,localhost:2182,localhost:2183'); 
+const client = zookeeper.createClient('zoo1:2181,zoo2:2181,z003:2181'); 
 
 const BASE_PATH = '/url_shortener';
 const RANGE_SIZE = 10000;

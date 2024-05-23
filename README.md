@@ -20,7 +20,9 @@ Before you begin, ensure you have the following prerequisites installed on your 
 
 - **MongoDB**: MongoDB is required for storing data. If you don't have MongoDB installed locally, you can download and install it from [here](https://www.mongodb.com/try/download/community).
 
-- **Docker Desktop**: Docker Desktop is needed to run ZooKeeper instances for range allocation. You can download and install it from [here](https://www.docker.com/products/docker-desktop).
+- **Docker Desktop**: Docker Desktop is needed to run Docker containers for some services. You can download and install it from [here](https://www.docker.com/products/docker-desktop).
+
+- **ZooKeeper**: ZooKeeper is used for range allocation. Detailed setup instructions can be found in the `server/services/Shortener/zookeeper/README.md` file.
 
 ## Project Structure
 
@@ -48,34 +50,37 @@ Follow these steps to set up and run the URL Shortener application locally:
     npm install
     ```
 
-4. Start the MongoDB server:
+4. Start the MongoDB server (change your database url to mongodb://127.0.0.1:27017 if you're using mongod locally):
     ```
     mongod
     ```
+    Alternatively, you can use the docker-compose.yml file in 'server/mongoDB' to create a Docker application with sharded clusters. Refer to this [blog](https://medium.com/@yasasvi/mongodb-sharding-with-docker-c8b18bee32eb).
 
-5. Start ZooKeeper to handle range allocation. If you haven't set up ZooKeeper yet, refer to the documentation or README provided in the `server/services/Shortener/zookeeper` folder.
-
-6. Start each microservice (Fetcher, Redirector, Shortener) in separate terminal windows:
+5. Start ZooKeeper using the Docker Compose file located in server/services/Shortener/zookeeper:
     ```
-    cd fetcher
-    npm start
-    ```
-    ```
-    cd ../redirector
-    npm start
-    ```
-    ```
-    cd ../shortener
-    npm start
+    docker-compose up -d 
     ```
 
-7. Finally, start the frontend:
+
+6. Start each microservice (Fetcher, Redirector, Shortener) in Docker containers:
+    ```
+    cd server/services/Shortener
+    docker-compose up -d --build
+    cd ../Fetcher
+    docker-compose up -d --build
+    cd ../Redirector
+    docker-compose up -d --build
+    ```
+
+7. Check if each service is successfully connected to the database by accessing their logs.
+
+8. Finally, start the frontend:
     ```
     cd ../../client
     npm start
     ```
 
-8. Access the application in your browser at `http://localhost:5173`.
+9. Access the application in your browser at `http://localhost:5173`.
 
 ## Contributions
 

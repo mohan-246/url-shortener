@@ -1,0 +1,16 @@
+
+version: '3'
+
+services:
+
+  fetcher:
+    container_name: fetch-service
+    build: .
+    ports:
+      - "3001:3001"
+    networks:
+      - url_shortener
+
+networks:
+  url_shortener:
+    external: true  
