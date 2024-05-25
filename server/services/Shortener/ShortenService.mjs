@@ -5,7 +5,6 @@ import 'dotenv/config.js'
 import serviceAccount from "./firebase/serviceAccountKey.mjs";
 import connect from "./functions/setupDatabase.mjs";
 import URLModel from "./schemas/urlSchema.mjs";
-import RangeModel from "./schemas/RangeSchema.mjs";
 import base10ToBase62 from "./functions/base10ToBase62.mjs";
 import { allocateRange } from "./zookeeper/rangeManager.mjs";
 

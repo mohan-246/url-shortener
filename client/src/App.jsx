@@ -21,7 +21,7 @@ function App() {
         auth.currentUser
           .getIdToken()
           .then((idToken) => {
-            fetch(`http://localhost:3001/urls`, {
+            fetch(`http://localhost:3000/urls`, {
               method: "GET",
               headers: {
                 Authorization: idToken,
@@ -158,7 +158,7 @@ function App() {
           </div>
           <div className="flex h-full sm:w-auto w-[65vw] items-center justify-end gap-4 sm:mr-10 mr-4 ">
             {user ? (
-              <p className="sm:opacity-100 sm:flex-1 hidden">{user.email}</p>
+              <p className="sm:opacity-100 sm:flex hidden">{user.email}</p>
             ) : (
               <button className="sm:opacity-100 opacity-0 sm:h-10 sm:w-32 text h-[5vmin] w-[24vmin] gap-2 flex items-center justify-center text-gray-50 bg-white bg-opacity-25 rounded-full">
                 <a href="/signin">Login</a>

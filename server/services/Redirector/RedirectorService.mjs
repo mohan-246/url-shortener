@@ -17,8 +17,7 @@ connect();
 app.get('/:id', async (req, res) => {
     
     try {
-       const id = req.params.id;
-       console.log(id)
+      const id = req.params.id;
       const shortUrl = `http://localhost:3002/${id}`
       const url = await URLModel.findOne({shortUrl : shortUrl})
       url.clicks++
