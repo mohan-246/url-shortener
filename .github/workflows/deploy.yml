@@ -7,47 +7,38 @@ on:
     branches: [ "deployment" ]
   workflow_dispatch:
 
-
-
 jobs:
-  
   build:
-
-    defaults:
-      run:
-        working-directory: ./client
-
     runs-on: ubuntu-latest
-    
+
     steps:
-      - uses: actions/checkout@v4
-      
-      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: client  # Checkout the code into the client directory
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          path: ./client
           node-version: '20'
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
+        working-directory: ./client
       
       - name: Build
         run: npm run build
+        working-directory: ./client
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        with:
-          path: ./client
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './client/dist'
+          path: ./client/dist
       
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          path: ./client
