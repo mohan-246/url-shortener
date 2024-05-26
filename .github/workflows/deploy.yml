@@ -7,12 +7,16 @@ on:
     branches: [ "deployment" ]
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: client
+
 
 jobs:
+  
   build:
+
+    defaults:
+      run:
+        working-directory: client
+        
     runs-on: ubuntu-latest
     
     steps:
