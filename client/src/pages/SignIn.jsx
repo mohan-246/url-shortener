@@ -117,7 +117,7 @@ const SignIn = () => {
             </button>
             <p className="text-gray-50 sm:w-64 mb-2 w-[64vmin]">
               Don&#39;t have an account?{" "}
-              <a className="underline" href="http://localhost:5173/signup">
+              <a className="underline" href="/signup">
                 Sign up
               </a>
             </p>

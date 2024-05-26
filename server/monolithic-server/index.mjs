@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: `${process.env.SITE_URL}`,
     methods: ["GET" , "POST"],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
@@ -29,7 +29,7 @@ app.get('/:id', async (req, res) => {
     
     try {
       const id = req.params.id;
-      const shortUrl = `http://localhost:3000/${id}`
+      const shortUrl = `${process.env.SITE_URL}/${id}`
       const url = await URLModel.findOne({shortUrl : shortUrl})
       if(url){
         url.clicks++
@@ -57,7 +57,7 @@ app.post("/shorten", async (req, res) => {
 
     let siteId = currentID++;
     
-    const shortUrl = `http://localhost:3000/${base10ToBase62(siteId)}`;
+    const shortUrl = `${process.env.SITE_URL}/${base10ToBase62(siteId)}`;
 
     try {
       const url = new URLModel({
