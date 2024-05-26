@@ -62,7 +62,6 @@ function App() {
       return dateB - dateA;
     });
     setUrls(sortedUrlsCopy);
-
   }, []);
   const logoutUser = () => {
     auth
@@ -74,60 +73,56 @@ function App() {
   };
   const shortenLink = async (e) => {
     e.preventDefault();
-    if(user){
-      
-    if (longUrl.trim() === "") {
-      window.alert("Enter a URl to convert!");
-      return;
-    }
-    auth.currentUser
-      .getIdToken()
-      .then((idToken) => {
-        fetch("http://localhost:3000/shorten", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: idToken,
-          },
-          body: JSON.stringify({ longUrl: longUrl }),
+    if (user) {
+      if (longUrl.trim() === "") {
+        window.alert("Enter a URl to convert!");
+        return;
+      }
+      auth.currentUser
+        .getIdToken()
+        .then((idToken) => {
+          fetch("http://localhost:3000/shorten", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: idToken,
+            },
+            body: JSON.stringify({ longUrl: longUrl }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              setShortUrl(data.url.shortUrl);
+              setUrls((prev) => [data.url, ...prev]);
+            })
+            .catch((error) => {
+              console.error(
+                "There was a problem sending the token to the server:",
+                error.message
+              );
+            });
         })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            setShortUrl(data.url.shortUrl);
-            setUrls((prev) => [data.url, ...prev]);
-          })
-          .catch((error) => {
-            console.error(
-              "There was a problem sending the token to the server:",
-              error.message
-            );
-          });
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+        .catch((error) => {
+          console.log(error.message);
+        });
+    } else {
+      showAlert(2);
     }
-    else{
-      showAlert(2)
-    }
-    
   };
-  
+
   const showAlert = async (usage) => {
     try {
-      if (usage == 1){
+      if (usage == 1) {
         await navigator.clipboard.writeText(shortUrl);
-        alertElement.innerHTML = "Copied to clipboard"
+        alertElement.innerHTML = "Copied to clipboard";
+      } else {
+        alertElement.innerHTML = "Please login to continue";
       }
-      else{
-        alertElement.innerHTML = "Please login to continue"
-      }
-      
+
       alertElement.classList.remove("hidden");
       alertElement.animate(
         [
@@ -182,17 +177,13 @@ function App() {
                 />
               </button>
             )}
-            <button className="sm:h-10 sm:w-32 text h-[7vmin] w-[24vmin] gap-2 flex items-center justify-center text-gray-50 bg-white bg-opacity-25 rounded-full">
-              <p
-                onClick={(e) => 
-                {
-                  e.preventDefault()
-                  user ? logoutUser : () => (window.location.href = "/signup")
-                }
-                }
-              >
-                {user ? "Sign Out" : "Sign Up"}
-              </p>
+            <button
+              className="sm:h-10 sm:w-32 text h-[7vmin] w-[24vmin] gap-2 flex items-center justify-center text-gray-50 bg-white bg-opacity-25 rounded-full"
+              onClick={
+                user ? logoutUser : () => (window.location.href = "/signup")
+              }
+            >
+              <p>{user ? "Sign Out" : "Sign Up"}</p>
               {user && (
                 <img
                   src="/signout.png"
