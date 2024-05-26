@@ -2,7 +2,8 @@ name: CI
 
 on:
   push:
-    branches: [ "deployment" ]
+    branches: 
+      - deployment
 
   workflow_dispatch:
 
@@ -16,10 +17,10 @@ concurrency:
   cancel-in-progress: true
   
 jobs:
-  deploy:
-    environment:
-      name: github-pages
+  build:
+    name: Build
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,9 +41,22 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload dist folder
+          name: production-files
           path: './client/dist'
+      
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: production-files
+          path: ./client/dist
+      
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./client/dist
         
