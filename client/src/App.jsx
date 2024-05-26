@@ -180,10 +180,10 @@ function App() {
             <button
               className="sm:h-10 sm:w-32 text h-[7vmin] w-[24vmin] gap-2 flex items-center justify-center text-gray-50 bg-white bg-opacity-25 rounded-full"
               onClick={
-                user ? logoutUser : () => (window.location.href = "/signup")
+                user && logoutUser 
               }
             >
-              <p>{user ? "Sign Out" : "Sign Up"}</p>
+              <a href={!user ? '/signup' : '/'}>{user ? "Sign Out" : "Sign Up"}</a>
               {user && (
                 <img
                   src="/signout.png"
