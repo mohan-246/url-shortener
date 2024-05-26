@@ -47,7 +47,6 @@ function App() {
             console.log(error.message);
           });
       } else {
-        window.location.href = "/signin";
         setUser(null);
       }
     });
@@ -64,7 +63,6 @@ function App() {
     });
     setUrls(sortedUrlsCopy);
 
-    urls.sort();
   }, []);
   const logoutUser = () => {
     auth
@@ -76,6 +74,8 @@ function App() {
   };
   const shortenLink = async (e) => {
     e.preventDefault();
+    if(user){
+      
     if (longUrl.trim() === "") {
       window.alert("Enter a URl to convert!");
       return;
@@ -111,10 +111,23 @@ function App() {
       .catch((error) => {
         console.log(error.message);
       });
+    }
+    else{
+      showAlert(2)
+    }
+    
   };
-  const copyToClipBoard = async () => {
+  
+  const showAlert = async (usage) => {
     try {
-      await navigator.clipboard.writeText(shortUrl);
+      if (usage == 1){
+        await navigator.clipboard.writeText(shortUrl);
+        alertElement.innerHTML = "Copied to clipboard"
+      }
+      else{
+        alertElement.innerHTML = "Please login to continue"
+      }
+      
       alertElement.classList.remove("hidden");
       alertElement.animate(
         [
@@ -122,7 +135,7 @@ function App() {
           { opacity: "1", transform: "translate(-50%, -50%)" },
         ],
         {
-          duration: 500,
+          duration: usage == 1 ? 500 : 1500,
           fill: "forwards",
         }
       );
@@ -134,7 +147,7 @@ function App() {
             { opacity: "0", transform: "translate(-50%, 0)" },
           ],
           {
-            duration: 500,
+            duration: usage == 1 ? 500 : 1500,
             fill: "forwards",
           }
         );
@@ -171,8 +184,11 @@ function App() {
             )}
             <button className="sm:h-10 sm:w-32 text h-[7vmin] w-[24vmin] gap-2 flex items-center justify-center text-gray-50 bg-white bg-opacity-25 rounded-full">
               <p
-                onClick={
+                onClick={(e) => 
+                {
+                  e.preventDefault()
                   user ? logoutUser : () => (window.location.href = "/signup")
+                }
                 }
               >
                 {user ? "Sign Out" : "Sign Up"}
@@ -221,7 +237,7 @@ function App() {
                   {shortUrl.slice(0, 25)}
                 </p>
                 <button
-                  onClick={copyToClipBoard}
+                  onClick={() => showAlert(1)}
                   className="bg-transparent h-full font-semibold sm:text-sm text-xs  rounded-full sm:p-3 px-1"
                 >
                   <img
