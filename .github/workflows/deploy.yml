@@ -14,9 +14,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          path: client  # Checkout the code into the client directory
-
+        
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
