@@ -29,7 +29,7 @@ app.get('/:id', async (req, res) => {
     
     try {
       const id = req.params.id;
-      const shortUrl = `${process.env.SITE_URL}/${id}`
+      const shortUrl = `${process.env.SERVER_URL}/${id}`
       const url = await URLModel.findOne({shortUrl : shortUrl})
       if(url){
         url.clicks++
@@ -56,8 +56,11 @@ app.post("/shorten", async (req, res) => {
     const uid = decodedToken.uid;
 
     let siteId = currentID++;
+    if (currentID >= currentRange){
+      currentID = 0;
+    }
     
-    const shortUrl = `${process.env.SITE_URL}/${base10ToBase62(siteId)}`;
+    const shortUrl = `${process.env.SERVER_URL}/${base10ToBase62(siteId)}`;
 
     try {
       const url = new URLModel({
