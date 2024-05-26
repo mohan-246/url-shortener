@@ -1,5 +1,6 @@
 {
   "name": "client",
+  "homepage" : "https://mohan-246.github.io/url-shortener/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
