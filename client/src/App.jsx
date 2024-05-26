@@ -21,7 +21,7 @@ function App() {
         auth.currentUser
           .getIdToken()
           .then((idToken) => {
-            fetch(`http://localhost:3000/urls`, {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/urls`, {
               method: "GET",
               headers: {
                 Authorization: idToken,
@@ -81,7 +81,7 @@ function App() {
       auth.currentUser
         .getIdToken()
         .then((idToken) => {
-          fetch("http://localhost:3000/shorten", {
+          fetch(`${import.meta.env.VITE_BACKEND_URL}/shorten`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
