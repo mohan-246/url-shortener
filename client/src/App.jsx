@@ -97,7 +97,7 @@ function App() {
             })
             .then((data) => {
               setShortUrl(data.url.shortUrl);
-              setUrls((prev) => [data.url, ...prev]);
+              setUrls((prev) => [...prev , data.url]);
             })
             .catch((error) => {
               console.error(
