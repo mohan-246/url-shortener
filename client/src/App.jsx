@@ -224,8 +224,8 @@ function App() {
           <div>
             {shortUrl && (
               <div className="rounded-full mt-2 mb-2 px-2 items-center  bg-white bg-opacity-45 backdrop-blur-lg  outline-gray-50 flex h-12  w-auto  outline outline-1">
-                <p className="sm:h-8 text-xl sm:w-56 cursor-text flex h-[10vmin] w-[45vmin] p-5 bg-transparent text-gray-50 outline-none items-center justify-center">
-                  {shortUrl.slice(0, 25)}
+                <p className="sm:h-8 sm:w-56 cursor-text flex h-[10vmin] w-[45vmin] p-5 bg-transparent text-gray-50 outline-none items-center justify-center">
+                  {shortUrl}
                 </p>
                 <button
                   onClick={() => showAlert(1)}
